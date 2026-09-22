@@ -1,0 +1,508 @@
+======
+String
+======
+
+/ {
+	compatible = "vendor,device";
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (string_literal))))))
+
+====
+Bits
+====
+
+/ {
+	prop-hex64 = /bits/ 64 <0xdeadbeef0fa1afe1>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (bits
+            (int_literal))
+          (array
+            (int_literal)))))))
+
+===========
+Empty array
+===========
+
+/ {
+	prop-array = <>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array))))))
+
+===============
+Integer literal
+===============
+
+/ {
+	#prop-int = <42>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (int_literal)))))))
+
+==================
+Integer expression
+==================
+
+/ {
+	#prop-int-expr = <(0x123456 * 7 + 8)>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (int_parenthesized_expression
+              (int_binary_op
+                (int_binary_op
+                  (int_literal)
+                  (int_literal))
+                (int_literal)))))))))
+
+==========================
+Multiple element int array
+==========================
+
+/ {
+	prop-int-4 = <1 2 3 4>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (int_literal)
+            (int_literal)
+            (int_literal)
+            (int_literal)))))))
+
+=============================
+Greater than expression array
+=============================
+
+/ {
+	prop-gt = <(1 > 2)>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (int_parenthesized_expression
+              (int_binary_op
+                (int_literal)
+                (int_literal)))))))))
+
+======================
+Unary expression array
+======================
+
+/ {
+	prop-unary = <(-2)>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (int_parenthesized_expression
+              (int_unary_op
+                (int_literal)))))))))
+
+========================
+Ternary expression array
+========================
+
+/ {
+	prop-ternary = <(1 > 2 ? 1 : 2)>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (int_parenthesized_expression
+              (int_ternary_op
+                (int_binary_op
+                  (int_literal)
+                  (int_literal))
+                (int_literal)
+                (int_literal)))))))))
+
+=====================
+Label reference array
+=====================
+
+/ {
+	prop-ref = <&label>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (reference
+              (label_ref))))))))
+
+====================
+Path reference array
+====================
+
+/ {
+	prop-path = <&{path/to/node_0}>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (reference
+              (path_ref))))))))
+
+===========
+Mixed array
+===========
+
+/ {
+	prop-array = <label0: 0x42 label1: &node label2: (1 + 1) label3:>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (label)
+            (int_literal)
+            (label)
+            (reference
+              (label_ref))
+            (label)
+            (int_parenthesized_expression
+              (int_binary_op
+                (int_literal)
+                (int_literal)))
+            (label)))))))
+
+================
+Empty bytestring
+================
+
+/ {
+	prop-bytestring = [];
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (bytestring))))))
+
+==========
+Bytestring
+==========
+
+/ {
+	prop-bytestring = [deadbeef fa1fafe1];
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (bytestring
+            (byte)
+            (byte)
+            (byte)
+            (byte)
+            (byte)
+            (byte)
+            (byte)
+            (byte)))))))
+
+==================
+Labeled bytestring
+==================
+
+/ {
+	prop-bytestring = beg: [label0: label1: 11 22 label1: aa bb label2:] end:;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (label)
+          (bytestring
+            (label)
+            (label)
+            (byte)
+            (byte)
+            (label)
+            (byte)
+            (byte)
+            (label))
+          (label))))))
+
+===============
+Label reference
+===============
+
+/ {
+	prop-ref = &label;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (reference
+            (label_ref)))))))
+
+==============
+Path reference
+==============
+
+/ {
+	prop-ref = &{path/to/node};
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (reference
+            (path_ref)))))))
+
+======
+Incbin
+======
+
+/ {
+	prop-incbin = /incbin/("file.bin");
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (incbin
+            (string_literal)))))))
+
+==============
+Incbin partial
+==============
+
+/ {
+	prop-incbin = /incbin/("file.bin", 42, 62);
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (incbin
+            (string_literal)
+            (int_literal)
+            (int_literal)))))))
+
+=======
+Boolean
+=======
+
+/ {
+	prop-bool;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)))))
+
+===============
+Labeled Boolean
+===============
+
+/ {
+	label: prop-bool;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (label)
+        (prop_node_name)))))
+
+========================
+Multiple labeled Boolean
+========================
+
+/ {
+	label1: label2: prop-bool;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (label)
+        (label)
+        (prop_node_name)))))
+
+======
+Delete
+======
+
+/ {
+	/delete-property/ prop;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (delete_property
+          (prop_node_name))))))
+
+===============
+Comma separated
+===============
+
+/ {
+	prop-comma = string: "str", byte: [12 34] comma:, array: <label: 1 2 3>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (label)
+          (string_literal))
+        (prop_data
+          (label)
+          (bytestring
+            (byte)
+            (byte))
+          (label))
+        (prop_data
+          (label)
+          (array
+            (label)
+            (int_literal)
+            (int_literal)
+            (int_literal)))))))

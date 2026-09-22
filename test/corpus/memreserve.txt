@@ -1,0 +1,62 @@
+=====
+Plain
+=====
+
+/memreserve/ 0x123456 0x100000;
+
+---
+
+(source_file
+  (memreserve
+    (int_literal)
+    (int_literal)))
+
+========================
+Parenthesized expression
+========================
+
+/memreserve/ ((0x123456 + 7) * 1 * 2) 0x100000;
+
+---
+
+(source_file
+  (memreserve
+    (int_parenthesized_expression
+      (int_binary_op
+        (int_binary_op
+          (int_parenthesized_expression
+            (int_binary_op
+              (int_literal)
+              (int_literal)))
+          (int_literal))
+        (int_literal)))
+    (int_literal)))
+
+=====
+Label
+=====
+
+label: /memreserve/ 123456 100000;
+
+---
+
+(source_file
+  (memreserve
+    (label)
+    (int_literal)
+    (int_literal)))
+
+===============
+Multiple labels
+===============
+
+label0: label1: /memreserve/ '\a' '\'';
+
+---
+
+(source_file
+  (memreserve
+    (label)
+    (label)
+    (char_literal)
+    (char_literal)))

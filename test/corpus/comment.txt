@@ -1,0 +1,102 @@
+=================
+C++-style comment
+=================
+
+// C++-style comment.
+
+---
+
+(source_file
+  (comment))
+
+=======================================
+C++-style comment with escaped newline
+=======================================
+
+// beg \
+   end
+
+---
+
+(source_file
+  (comment))
+
+===============================================
+C++-style comment with escaped char and newline
+===============================================
+
+// beg \a \b \
+   end
+// beg \c \d
+
+---
+
+(source_file
+  (comment)
+  (comment))
+
+===============
+C-style comment
+===============
+
+/* C-style comment. */
+
+---
+
+(source_file
+  (comment))
+
+=========================
+C-style multiline comment
+=========================
+
+/* C-style
+ * multiline
+ * comment.
+ */
+
+---
+
+(source_file
+  (comment))
+
+=======
+Mixture
+=======
+
+/ {
+	// C++-style comment.
+	prop-1;
+
+	/* C-style comment. */
+    prop-2;
+
+	/* C-style
+	 * multiline
+	 * comment.
+	 */
+     prop-3;
+
+	/* label: */ node /* comment */ {
+	};
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (comment)
+      (property
+        (prop_node_name))
+      (comment)
+      (property
+        (prop_node_name))
+      (comment)
+      (property
+        (prop_node_name))
+      (comment)
+      (subnode
+        (prop_node_name)
+        (comment)
+        (node_def)))))

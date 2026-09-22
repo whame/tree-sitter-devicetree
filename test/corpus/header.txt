@@ -1,0 +1,21 @@
+============
+File version
+============
+
+/dts-v1/;
+
+---
+
+(source_file
+  (header))
+
+=======
+Overlay
+=======
+
+/plugin/;
+
+---
+
+(source_file
+  (header))

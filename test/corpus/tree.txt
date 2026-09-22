@@ -1,0 +1,144 @@
+==========
+Empty root
+==========
+
+/ {
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def)))
+
+==============
+Multiple roots
+==============
+
+/ {
+};
+
+/ {
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def))
+  (devicetree
+    (node_def)))
+
+===============
+Label reference
+===============
+
+&label_0 {
+};
+
+---
+
+(source_file
+  (devicetree
+    (reference
+      (label_ref))
+    (node_def)))
+
+==============
+Path reference
+==============
+
+&{path/to/node} {
+};
+
+---
+
+(source_file
+  (devicetree
+    (reference
+      (path_ref))
+    (node_def)))
+
+=======================
+Labeled label reference
+=======================
+
+label: &node_0 {
+};
+
+---
+
+(source_file
+  (devicetree
+    (label)
+    (reference
+      (label_ref))
+    (node_def)))
+
+======================
+Labeled path reference
+======================
+
+label: &{path/to/node_0} {
+};
+
+---
+
+(source_file
+  (devicetree
+    (label)
+    (reference
+      (path_ref))
+    (node_def)))
+
+=================
+Delete node label
+=================
+
+/delete-node/ &label;
+
+---
+
+(source_file
+  (delete_node_ref
+    (reference
+      (label_ref))))
+
+================
+Delete node path
+================
+
+/delete-node/ &{path/to/node};
+
+---
+
+(source_file
+  (delete_node_ref
+    (reference
+      (path_ref))))
+
+==========
+Omit label
+==========
+
+/omit-if-no-ref/ &label;
+
+---
+
+(source_file
+  (omit_node_ref
+    (reference
+      (label_ref))))
+
+=========
+Omit path
+=========
+
+/omit-if-no-ref/ &{path/to/node};
+
+---
+
+(source_file
+  (omit_node_ref
+    (reference
+      (path_ref))))

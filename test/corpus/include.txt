@@ -1,0 +1,79 @@
+=====
+Plain
+=====
+
+/include/ "path/to/include/file.dtsi"
+
+---
+
+(source_file
+  (include
+    (string_literal)))
+
+=============
+Escaped quote
+=============
+
+/include/ "path/to/\"include\"/\"file.dtsi\""
+
+---
+
+(source_file
+  (include
+    (string_literal)))
+
+================
+Escape character
+================
+
+/include/ "path/to/\\include\\/file.dtsi"
+
+---
+
+(source_file
+  (include
+    (string_literal)))
+
+=======
+Subnode
+=======
+
+// A subnode can be a top-level item in an include file.
+node {
+	prop-before;
+
+	/include/ "path/to/include/file.dtsi"
+
+	prop-after;
+
+	/include/ "path/to/include/file.dtsi"
+
+	node2 {
+		/include/ "path/to/include/file.dtsi"
+	};
+
+	/include/ "path/to/include/file.dtsi"
+};
+
+---
+
+(source_file
+  (comment)
+  (subnode
+    (prop_node_name)
+    (node_def
+      (property
+        (prop_node_name))
+      (include
+        (string_literal))
+      (property
+        (prop_node_name))
+      (include
+        (string_literal))
+      (subnode
+        (prop_node_name)
+        (node_def
+          (include
+            (string_literal))))
+      (include
+        (string_literal)))))

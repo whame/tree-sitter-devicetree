@@ -1,0 +1,762 @@
+=======
+Include
+=======
+
+#include "file.dtsi"
+
+---
+
+(source_file
+  (preproc_include
+    (preproc_string_literal
+      (string_content))))
+
+===============
+Include newline
+:error
+===============
+
+#include "file.dtsi
+"
+
+---
+
+
+
+=====================
+Comment after include
+=====================
+
+#include "file.dtsi" /* comment */
+#include "file.dtsi" // comment
+
+---
+
+(source_file
+  (preproc_include
+    (preproc_string_literal
+      (string_content))
+    (comment))
+  (preproc_include
+    (preproc_string_literal
+      (string_content))
+    (comment)))
+
+==============
+Include system
+==============
+
+#include <path/to/file.dtsi>
+
+---
+
+(source_file
+  (preproc_include
+    (system_lib_string)))
+
+============================
+Comment after include system
+============================
+
+
+#include <path/to/file.dtsi> /* comment */
+#include <path/to/file.dtsi> // comment
+
+---
+
+(source_file
+  (preproc_include
+    (system_lib_string)
+    (comment))
+  (preproc_include
+    (system_lib_string)
+    (comment)))
+
+===============
+Include in node
+===============
+
+/ {
+	prop-before;
+
+	#include "file.dtsi"
+
+	prop-after;
+
+	node {
+		#include <path/to/file.dtsi>
+	};
+
+	#include <path/to/file.dtsi>
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name))
+      (preproc_include
+        (preproc_string_literal
+          (string_content)))
+      (property
+        (prop_node_name))
+      (subnode
+        (prop_node_name)
+        (node_def
+          (preproc_include
+            (system_lib_string))))
+      (preproc_include
+        (system_lib_string)))))
+
+======
+Define
+======
+
+#define DEBUG
+#define FREQ 100
+
+---
+
+(source_file
+  (preproc_def
+    (preproc_identifier))
+  (preproc_def
+    (preproc_identifier)
+    (preproc_arg)))
+
+====================
+Comment after define
+====================
+
+#define DEBUG /* comment */
+#define DEBUG // comment
+
+#define FREQ 100 /* comment */
+#define FREQ 100 // comment
+
+---
+
+(source_file
+  (preproc_def
+    (preproc_identifier)
+    (comment))
+  (preproc_def
+    (preproc_identifier)
+    (comment))
+  (preproc_def
+    (preproc_identifier)
+    (preproc_arg)
+    (comment))
+  (preproc_def
+    (preproc_identifier)
+    (preproc_arg)
+    (comment)))
+
+==========
+Line break
+==========
+
+#define FREQ \
+	100
+
+node {
+	prop-array = <1 2 \
+		3>;
+};
+
+---
+
+(source_file
+  (preproc_def
+    (preproc_identifier)
+    (preproc_arg))
+  (subnode
+    (prop_node_name)
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (int_literal)
+            (int_literal)
+            (int_literal)))))))
+
+==============
+Define in node
+==============
+
+/ {
+	prop-before;
+
+	#define FREQ 100
+
+	prop-after;
+
+	node {
+		#define FREQ2 100
+	};
+
+	#define FREQ3 100
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name))
+      (preproc_def
+        (preproc_identifier)
+        (preproc_arg))
+      (property
+        (prop_node_name))
+      (subnode
+        (prop_node_name)
+        (node_def
+          (preproc_def
+            (preproc_identifier)
+            (preproc_arg))))
+      (preproc_def
+        (preproc_identifier)
+        (preproc_arg)))))
+
+========
+Undefine
+========
+
+#undef FREQ
+
+---
+
+(source_file
+  (preproc_undef
+    (preproc_identifier)))
+
+================
+Undefine in node
+================
+
+/ {
+	prop-before;
+
+	#undef FREQ
+
+	prop-after;
+
+	node {
+		#undef FREQ2
+	};
+
+	#undef FREQ3
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name))
+      (preproc_undef
+        (preproc_identifier))
+      (property
+        (prop_node_name))
+      (subnode
+        (prop_node_name)
+        (node_def
+          (preproc_undef
+            (preproc_identifier))))
+      (preproc_undef
+        (preproc_identifier)))))
+
+===============
+Function define
+===============
+
+#define ADD(a, b, c) (a + b + c)
+#define FUNC() 1
+#define LOG(fmt, ...) printf(stdout, fmt, __VA_ARGS__)
+#define DBG(args...) debug(args)
+
+---
+
+(source_file
+  (preproc_function_def
+    (preproc_identifier)
+    (preproc_params
+      (preproc_identifier)
+      (preproc_identifier)
+      (preproc_identifier))
+    (preproc_arg))
+  (preproc_function_def
+    (preproc_identifier)
+    (preproc_params)
+    (preproc_arg))
+  (preproc_function_def
+    (preproc_identifier)
+    (preproc_params
+      (preproc_identifier)
+      (preproc_identifier))
+    (preproc_arg))
+  (preproc_function_def
+    (preproc_identifier)
+    (preproc_params
+      (preproc_identifier))
+    (preproc_arg)))
+
+===
+If
+===
+
+#if ((DEFINE + 1) > 0)
+/ {
+};
+#endif
+
+---
+
+(source_file
+  (preproc_if
+    (preproc_parenthesized_expression
+      (preproc_binary_expression
+        (preproc_parenthesized_expression
+          (preproc_binary_expression
+            (preproc_identifier)
+            (preproc_number_literal)))
+        (preproc_number_literal)))
+    (devicetree
+      (node_def))))
+
+==========
+If in node
+==========
+
+/ {
+	prop-before;
+
+#if (PROP_AFTER == 1)
+	prop-after;
+#endif
+
+	node {
+	};
+
+#if 0
+	node {
+	};
+#endif
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name))
+      (preproc_if_in_node_def
+        (preproc_parenthesized_expression
+          (preproc_binary_expression
+            (preproc_identifier)
+            (preproc_number_literal)))
+        (property
+          (prop_node_name)))
+      (subnode
+        (prop_node_name)
+        (node_def))
+      (preproc_if_in_node_def
+        (preproc_number_literal)
+        (subnode
+          (prop_node_name)
+          (node_def))))))
+
+=====
+Ifdef
+=====
+
+#ifdef DEFINE
+/ {
+};
+#endif
+
+#ifndef SINGLE
+/ {
+};
+#endif
+
+---
+
+(source_file
+  (preproc_ifdef
+    (preproc_identifier)
+    (devicetree
+      (node_def)))
+  (preproc_ifdef
+    (preproc_identifier)
+    (devicetree
+      (node_def))))
+
+=============
+Ifdef in node
+=============
+
+/ {
+	prop-before;
+
+	#ifdef PROP_AFTER
+	prop-after;
+	#endif
+
+	node {
+	};
+
+    #ifdef NODE
+	node {
+	};
+	#endif
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name))
+      (preproc_ifdef_in_node_def
+        (preproc_identifier)
+        (property
+          (prop_node_name)))
+      (subnode
+        (prop_node_name)
+        (node_def))
+      (preproc_ifdef_in_node_def
+        (preproc_identifier)
+        (subnode
+          (prop_node_name)
+          (node_def))))))
+
+=========
+Directive
+=========
+
+#pragma once
+
+#if (COND1 && COND2)
+#error "COND1 && COND2"
+#elif (COND3)
+#error "COND3"
+#else
+#warning "else"
+#endif
+
+---
+
+(source_file
+  (preproc_call
+    (preproc_directive)
+    (preproc_arg))
+  (preproc_if
+    (preproc_parenthesized_expression
+      (preproc_binary_expression
+        (preproc_identifier)
+        (preproc_identifier)))
+    (preproc_call
+      (preproc_directive)
+      (preproc_arg))
+    (preproc_elif
+      (preproc_parenthesized_expression
+        (preproc_identifier))
+      (preproc_call
+        (preproc_directive)
+        (preproc_arg))
+      (preproc_else
+        (preproc_call
+          (preproc_directive)
+          (preproc_arg))))))
+
+=============
+Function call
+=============
+
+GEN_DEVICETREE(1a, 2, 3);
+
+---
+
+(source_file
+  (preproc_function_call_statement
+    (preproc_function_call
+      (preproc_identifier)
+      (preproc_argument_list
+        (preproc_identifier)
+        (preproc_number_literal)
+        (preproc_number_literal)))))
+
+=====================
+Function call in node
+=====================
+
+/ {
+	prop-before;
+
+	GEN_PROP(1, 2, 3);
+
+	prop-after;
+
+	node {
+		GEN_PROP(1, 2, 3);
+	};
+
+	GEN_NODE(1, 2, 3);
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name))
+      (preproc_function_call_statement
+        (preproc_function_call
+          (preproc_identifier)
+          (preproc_argument_list
+            (preproc_number_literal)
+            (preproc_number_literal)
+            (preproc_number_literal))))
+      (property
+        (prop_node_name))
+      (subnode
+        (prop_node_name)
+        (node_def
+          (preproc_function_call_statement
+            (preproc_function_call
+              (preproc_identifier)
+              (preproc_argument_list
+                (preproc_number_literal)
+                (preproc_number_literal)
+                (preproc_number_literal))))))
+      (preproc_function_call_statement
+        (preproc_function_call
+          (preproc_identifier)
+          (preproc_argument_list
+            (preproc_number_literal)
+            (preproc_number_literal)
+            (preproc_number_literal)))))))
+
+=====================
+Function call as name
+=====================
+
+GEN_NAME(1, 2, 3) {
+};
+
+---
+
+(source_file
+  (subnode
+    (preproc_function_call
+      (preproc_identifier)
+      (preproc_argument_list
+        (preproc_number_literal)
+        (preproc_number_literal)
+        (preproc_number_literal)))
+    (node_def)))
+
+======================
+Function call as label
+======================
+
+GEN_LABEL(1, 2, 3): node {
+};
+
+---
+
+(source_file
+  (subnode
+    (label
+      (preproc_function_call
+        (preproc_identifier)
+        (preproc_argument_list
+          (preproc_number_literal)
+          (preproc_number_literal)
+          (preproc_number_literal))))
+    (prop_node_name)
+    (node_def)))
+
+================================
+Function call as label reference
+================================
+
+&GEN_LABEL(1, 2, 3) {
+};
+
+---
+
+(source_file
+  (devicetree
+    (reference
+      (label_ref
+        (preproc_function_call
+          (preproc_identifier)
+          (preproc_argument_list
+            (preproc_number_literal)
+            (preproc_number_literal)
+            (preproc_number_literal)))))
+    (node_def)))
+
+===================
+Identifier in array
+===================
+
+/ {
+	gpios = <&gpio 8 GPIO_ACTIVE_LOW>;
+	interrupts = <GIC_PPI 11 (GIC_CPU_MASK | IRQ_TYPE_EDGE_RISING)>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (reference
+              (label_ref))
+            (int_literal)
+            (preproc_identifier))))
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (preproc_identifier)
+            (int_literal)
+            (int_parenthesized_expression
+              (int_binary_op
+                (preproc_identifier)
+                (preproc_identifier)))))))))
+
+======================
+Function call in array
+======================
+
+/ {
+	interrupts = <GIC_PPI 11 FUNC(GIC_CPU_MASK(4) | IRQ_TYPE_EDGE_RISING)>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (preproc_identifier)
+            (int_literal)
+            (preproc_function_call
+              (preproc_identifier)
+              (preproc_argument_list
+                (preproc_binary_expression
+                  (preproc_function_call
+                    (preproc_identifier)
+                    (preproc_argument_list
+                      (preproc_number_literal)))
+                  (preproc_identifier))))))))))
+
+==============
+Ifdef in array
+==============
+
+/ {
+	prop-array = <
+		&val0
+		&val1
+#ifdef VAL2
+		&val2
+#elifdef VAL3
+		&val3
+#elifndef VAL4
+		&val4
+#else
+		0
+#endif
+	>;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (array
+            (reference
+              (label_ref))
+            (reference
+              (label_ref))
+            (preproc_ifdef_in_array
+              (preproc_identifier)
+              (reference
+                (label_ref))
+              (preproc_elifdef_in_array
+                (preproc_identifier)
+                (reference
+                  (label_ref))
+                (preproc_elifdef_in_array
+                  (preproc_identifier)
+                  (reference
+                    (label_ref))
+                  (preproc_else_in_array
+                    (int_literal)))))))))))
+
+========================
+Property data identifier
+========================
+
+&leds {
+	function = LED_FUNCTION_FAULT;
+};
+
+---
+
+(source_file
+  (devicetree
+    (reference
+      (label_ref))
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (preproc_identifier))))))
+
+===========================
+Property data function call
+===========================
+
+&leds {
+	function = LED_FUNCTION_FAULT(1);
+};
+
+---
+
+(source_file
+  (devicetree
+    (reference
+      (label_ref))
+    (node_def
+      (property
+        (prop_node_name)
+        (prop_data
+          (preproc_function_call
+            (preproc_identifier)
+            (preproc_argument_list
+              (preproc_number_literal))))))))

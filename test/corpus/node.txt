@@ -1,0 +1,148 @@
+=====
+Empty
+=====
+
+/ {
+	node {
+	};
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (subnode
+        (prop_node_name)
+        (node_def)))))
+
+========
+Multiple
+========
+
+/ {
+	node@0 {
+	};
+
+	node@1 {
+	};
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (subnode
+        (prop_node_name)
+        (node_def))
+      (subnode
+        (prop_node_name)
+        (node_def)))))
+
+======
+Nested
+======
+
+/ {
+	node@0 {
+		node@1 {
+		};
+	};
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (subnode
+        (prop_node_name)
+        (node_def
+          (subnode
+            (prop_node_name)
+            (node_def)))))))
+
+======
+Delete
+======
+
+/ {
+	/delete-node/ node0;
+
+	node@1 {
+		/delete-node/ node2;
+	};
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (subnode
+        (delete_node
+          (prop_node_name)))
+      (subnode
+        (prop_node_name)
+        (node_def
+          (subnode
+            (delete_node
+              (prop_node_name))))))))
+
+====
+Omit
+====
+
+/ {
+	/omit-if-no-ref/ node0 {
+	};
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (subnode
+        (omit_node
+          (subnode
+            (prop_node_name)
+            (node_def)))))))
+
+=====
+Label
+=====
+
+/ {
+	label0: label1: /omit-if-no-ref/ label2: /omit-if-no-ref/ node0 {
+	};
+
+	label3: label4: /omit-if-no-ref/ label5: /omit-if-no-ref/ /delete-node/ n1;
+};
+
+---
+
+(source_file
+  (devicetree
+    (node_def
+      (subnode
+        (label)
+        (label)
+        (omit_node
+          (subnode
+            (label)
+            (omit_node
+              (subnode
+                (prop_node_name)
+                (node_def))))))
+      (subnode
+        (label)
+        (label)
+        (omit_node
+          (subnode
+            (label)
+            (omit_node
+              (subnode
+                (delete_node
+                  (prop_node_name))))))))))
